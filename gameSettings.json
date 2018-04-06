@@ -1,0 +1,71 @@
+{
+    "graphics": {
+        "shaders": {
+            "none": {
+                "fragment_shader": "null",
+                "vertex_shader": "null",
+                "geometry_shader": "null"
+            },
+            "default": {
+                "vertex_shader": "shaders\/vertex\/default.shader",
+                "geometry_shader": "null",
+                "fragment_shader": "shaders\/fragment\/default.shader"
+            },
+            "textured": {
+                "vertex_shader": "shaders\/vertex\/textured.shader",
+                "geometry_shader": "null",
+                "fragment_shader": "shaders\/fragment\/textured.shader"
+            }
+        },
+        "resolution": {
+            "x": "640",
+            "y": "480"
+        },
+        "textures": {
+            "default": "assets\/default.bmp"
+        },
+        "texturelist": [
+            "default"
+        ]
+    },
+    "gameplay": "",
+    "keys": {
+        "Escape": {
+            "up": "quit"
+        },
+        "Up": {
+            "up": "camera.move.up = false",
+            "down": "camera.move.up = true"
+        },
+        "Down": {
+            "up": "camera.move.down = false",
+            "down": "camera.move.down = true"
+        },
+        "Left": {
+            "up": "camera.move.left = false",
+            "down": "camera.move.left = true"
+        },
+        "Right": {
+            "up": "camera.move.right = false",
+            "down": "camera.move.right = true"
+        },
+        "Keypad +": {
+            "up": "camera.move.in = false",
+            "down": "camera.move.in = true"
+        },
+        "Keypad -": {
+            "up": "camera.move.out = false",
+            "down": "camera.move.out = true"
+        },
+        "Space": "unkown",
+        "`": "toggleLines"
+    },
+    "chunks": {
+        "size": "16",
+        "layers": "8"
+    },
+    "camera": {
+        "speed": "1",
+        "zspeed": "0.1"
+    }
+}
