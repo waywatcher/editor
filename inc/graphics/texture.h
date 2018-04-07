@@ -1,7 +1,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "graphics/cImg.h"
 #include "util/settings.h"
 #define GLEW_STATIC
 #include <GL/glew.h>

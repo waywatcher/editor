@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <initializer_list>
+#include <Python.h>
 #include <cmath>
 
 template<unsigned int N, typename T>

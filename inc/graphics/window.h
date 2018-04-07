@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #define GLEW_STATIC
+#include <Python.h>
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include "util/exception.h"
@@ -14,6 +15,8 @@
 #include <tuple>
 #include "graphics/tile.h"
 #include "graphics/vbo.h"
+#include <boost/chrono.hpp>
+#include <boost/thread/thread.hpp>
 
 class Window;
 

@@ -5,5 +5,6 @@
 #include "graphics/matrix.h"
 #include "graphics/window.h"
 #include <chrono>
+#include <boost/thread/thread.hpp>
 
 #endif

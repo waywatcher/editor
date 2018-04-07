@@ -16,7 +16,7 @@ int SDL_main(int argc, char *argv[])
 
 		//the logic thread
 		//currently one but might spawn a lot of threads if python is too slow
-		std::thread logic([&](){w.loop();});
+		boost::thread logic([&](){w.loop();});
 
 		//the rendering thread
 		w.renderLoop();

@@ -64,16 +64,16 @@ void Window::renderLoop()
 
 void Window::loop()
 {
-	auto xLast = std::chrono::high_resolution_clock::now();
+	auto xLast = boost::chrono::high_resolution_clock::now();
 	while(bKeepLooping)
 	{
 		processEvents();
-		auto xNow = std::chrono::high_resolution_clock::now();
-		double time_span = std::chrono::duration_cast<std::chrono::duration<double>>(xNow-xLast).count();
+		auto xNow = boost::chrono::high_resolution_clock::now();
+		double time_span = boost::chrono::duration_cast<boost::chrono::duration<double>>(xNow-xLast).count();
 		if(time_span < 0.01)
-			std::this_thread::sleep_for(std::chrono::milliseconds((int)(10 - time_span*1000)+1));
-		xNow = std::chrono::high_resolution_clock::now();
-		time_span = std::chrono::duration_cast<std::chrono::duration<double>>(xNow-xLast).count();
+			boost::this_thread::sleep_for(boost::chrono::milliseconds((int)(10 - time_span*1000)+1));
+		xNow = boost::chrono::high_resolution_clock::now();
+		time_span = boost::chrono::duration_cast<boost::chrono::duration<double>>(xNow-xLast).count();
 		xLast = xNow;
 		pScene->update(time_span);
 	}//while
