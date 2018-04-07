@@ -22,7 +22,7 @@
             "y": "480"
         },
         "textures": {
-            "default": "assets\/default.bmp"
+            "default": "assets\/stone.bmp"
         },
         "texturelist": [
             "default"
