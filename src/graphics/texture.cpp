@@ -11,33 +11,34 @@ Texture::Texture(std::string sFileName)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	//cimg_library::CImg<unsigned int> xTex(sFileName.c_str());
 
-	//float data[xTex.width()][xTex.height()][xTex.spectrum()];
+	cimg_library::CImg<unsigned int> xTex(sFileName.c_str());
 
-	//for(int x = 0; x < xTex.width(); x++)
-	//	for(int y = 0; y < xTex.height(); y++)
-	//		for(int z = 0; z < xTex.spectrum(); z++)
-	//			data[x][y][z] = (float)xTex.atXYZC(x,y,0,z) / 255.0f;
-//
-	//auto format = GL_RGB;
-//
-	//if(xTex.spectrum() == 4)
-	//	format = GL_RGBA;
+	float data[xTex.width()][xTex.height()][xTex.spectrum()];
 
-	//lTexImage2D(
-	//		GL_TEXTURE_2D,
-	//		0,
-	//		format,
-	//		xTex.width(),
-	//		xTex.height(),
-	//		0,
-	//		format,
-	//		GL_FLOAT,
-	//		data
-	//	);
+	for(int x = 0; x < xTex.width(); x++)
+		for(int y = 0; y < xTex.height(); y++)
+			for(int z = 0; z < xTex.spectrum(); z++)
+				data[x][y][z] = (float)xTex.atXYZC(x,y,0,z) / 255.0f;
 
-	//glActiveTexture(GL_TEXTURE0);
+	auto format = GL_RGB;
+
+	if(xTex.spectrum() == 4)
+		format = GL_RGBA;
+
+	glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			format,
+			xTex.width(),
+			xTex.height(),
+			0,
+			format,
+			GL_FLOAT,
+			data
+		);
+
+	glActiveTexture(GL_TEXTURE0);
 
 }//constructor
 

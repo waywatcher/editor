@@ -28,7 +28,7 @@ int SDL_main(int argc, char *argv[])
 	}
 	catch (Exception e)
 	{
-		std::cerr << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << std::endl;
 		return 0;
 	}
 }//function

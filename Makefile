@@ -9,7 +9,7 @@ GLEW=C:\glew-2.1.0
 CC=gcc
 BOOST=C:\boost\boost_1_65_1
 PYTHON=C:\Python35-32
-CCFLAGS= -Wall -fPIC -std=c++11 -Werror -g
+CCFLAGS= -Wall -fPIC -std=gnu++0x -Werror
 INCLUDES= \
  -isystem$(BOOST) \
  -isystem$(PYTHON)\include \
@@ -24,6 +24,7 @@ LDFLAGS= \
  -lmingw32 \
  -lSDL2main \
  -lSDL2 \
+ -lgdi32 \
  C:\Windows\System32\opengl32.dll \
  $(PYTHON)\libs\libpython35.a \
  $(BOOST)\stage\gcc\lib\libboost_python3-mgw63-mt-1_65_1.a \

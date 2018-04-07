@@ -53,6 +53,7 @@ Shader::Shader(std::shared_ptr<Settings> pSettings, std::string shaderName)
 
 	if(iStatus != GL_TRUE)
 	{
+		std::cerr << "Problem while linking shaders:" << std::endl;
 		char aBuffer[512];
 		glGetProgramInfoLog(iShaderProgram, 512, NULL, aBuffer);
 		std::cerr << "programm info log: " << std::endl;

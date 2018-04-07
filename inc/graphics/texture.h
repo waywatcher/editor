@@ -1,6 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <Python.h>
 #include "util/settings.h"
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -9,6 +10,7 @@
 #include <vector>
 #include <memory>
 #include "graphics/shader.h"
+#include "util/CImg.h"
 
 class Texture
 {

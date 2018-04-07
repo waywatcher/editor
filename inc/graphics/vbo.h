@@ -66,7 +66,7 @@ public:
 		}
 		catch(Exception e)
 		{
-			std::cerr << e.what() << std::endl;
+			std::cerr << "Exception: " << e.what() << std::endl;
 		}
 	}//function
 
