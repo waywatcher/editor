@@ -9,7 +9,7 @@ GLEW=C:\glew-2.1.0
 CC=gcc
 BOOST=C:\boost\boost_1_65_1
 PYTHON=C:\Python35-32
-CCFLAGS= -Wall -fPIC -std=c++11 -Werror
+CCFLAGS= -Wall -fPIC -std=c++11 -Werror -g
 INCLUDES= \
  -isystem$(BOOST) \
  -isystem$(PYTHON)\include \
@@ -26,10 +26,10 @@ LDFLAGS= \
  -lSDL2 \
  C:\Windows\System32\opengl32.dll \
  $(PYTHON)\libs\libpython35.a \
- $(BOOST)\stage\gcc\lib\libboost_python3-mgw63-mt-1_65_1.dll.a \
- $(BOOST)\stage\gcc\lib\libboost_thread-mgw63-mt-1_65_1.dll.a \
- $(BOOST)\stage\gcc\lib\libboost_system-mgw63-mt-1_65_1.dll.a \
- $(BOOST)\stage\gcc\lib\libboost_chrono-mgw63-mt-1_65_1.dll.a \
+ $(BOOST)\stage\gcc\lib\libboost_python3-mgw63-mt-1_65_1.a \
+ $(BOOST)\stage\gcc\lib\libboost_thread-mgw63-mt-1_65_1.a \
+ $(BOOST)\stage\gcc\lib\libboost_system-mgw63-mt-1_65_1.a \
+ $(BOOST)\stage\gcc\lib\libboost_chrono-mgw63-mt-1_65_1.a \
  C:\MinGW\lib\gcc\mingw32\6.3.0\libstdc++.a
 
 all: graphics.exe
