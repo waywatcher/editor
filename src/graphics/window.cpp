@@ -114,6 +114,26 @@ void Window::processEvents()
 						}
 					}
 					break;
+				case SDL_KEYUP:
+					try
+					{
+						action(pSettings->get<std::string>(
+							std::string("keys.").append(SDL_GetKeyName(event.key.keysym.sym))
+								.append(".up")));
+					}
+					catch(Exception e)
+					{
+						try
+						{
+							action(pSettings->get<std::string>(
+								std::string("keys.").append(SDL_GetKeyName(event.key.keysym.sym))));
+						}
+						catch(Exception e)
+						{
+							std::cout << std::string("Unknown Key: ").append(SDL_GetKeyName(event.key.keysym.sym)) << std::endl;
+						}
+					}
+					break;
 				case SDL_MOUSEWHEEL:
 					try
 					{
@@ -149,30 +169,30 @@ void Window::processEvents()
 				case SDL_MOUSEBUTTONDOWN:
 					try
 					{
-						action(pSettings->get<std::string>(std::string("mouse.wheel.click.down")));
+						action(pSettings->get<std::string>(std::string("mouse.click.down")));
 					}
 					catch(Exception e)
 					{
 						try
 						{
-						    action(pSettings->get<std::string>(std::string("mouse.wheel.click")));
+						    action(pSettings->get<std::string>(std::string("mouse.click")));
 						}
 						catch(Exception e)
 						{
-							std::cout << std::string("Unknown: mouse.wheel.click") << std::endl;
+							std::cout << std::string("Unknown: mouse.click") << std::endl;
 						}
 					}
 					break;
 				case SDL_MOUSEBUTTONUP:
 					try
 					{
-						action(pSettings->get<std::string>(std::string("mouse.wheel.click.up")));
+						action(pSettings->get<std::string>(std::string("mouse.click.up")));
 					}
 					catch(Exception e)
 					{
 						try
 						{
-						    action(pSettings->get<std::string>(std::string("mouse.wheel.click")));
+						    action(pSettings->get<std::string>(std::string("mouse.click")));
 						}
 						catch(Exception e)
 						{
@@ -180,28 +200,15 @@ void Window::processEvents()
 						}
 					}
 					break;
-				case SDL_KEYUP:
-					try
-					{
-						action(pSettings->get<std::string>(
-							std::string("keys.").append(SDL_GetKeyName(event.key.keysym.sym))
-								.append(".up")));
-					}
-					catch(Exception e)
-					{
-						try
-						{
-							action(pSettings->get<std::string>(
-								std::string("keys.").append(SDL_GetKeyName(event.key.keysym.sym))));
-						}
-						catch(Exception e)
-						{
-							std::cout << std::string("Unknown Key: ").append(SDL_GetKeyName(event.key.keysym.sym)) << std::endl;
-						}
-					}
-					break;
 				case SDL_MOUSEMOTION:
-					/* Handle key release. */
+                    int w,h;
+                    SDL_GetWindowSize(window, &w, &h);
+                    pScene->mouseMoveAction(
+                        *this, 
+                        (float)(event.motion.x - iLastMouseX) / w, 
+                        -(float)(event.motion.y - iLastMouseY) / h);
+                    iLastMouseX = event.motion.x;
+                    iLastMouseY = event.motion.y;
 					break;
 				case SDL_QUIT:
 					/* Handle quit requests (like Ctrl-c). */
@@ -343,6 +350,22 @@ World::World(std::shared_ptr<Settings> pSettings)
 				wo.fCameraZ -= wo.fCamZSpeed*wo.fCameraZ/10;
                 if (wo.fCameraZ < 1)
                     wo.fCameraZ = 1;
+			}
+		));
+	vActions.push_back(std::make_tuple(
+			"move.with.mouse = true",
+			[]
+			(World &wo, Window &w)
+			{
+				wo.bMoveWithMouse = true;
+			}
+		));
+	vActions.push_back(std::make_tuple(
+			"move.with.mouse = false",
+			[]
+			(World &wo, Window &w)
+			{
+				wo.bMoveWithMouse = false;
 			}
 		));
 }//constructor

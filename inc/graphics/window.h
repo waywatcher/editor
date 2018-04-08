@@ -25,6 +25,7 @@ class Scene
 {
 public:
 	virtual void action(std::string s, Window& w) {};
+	virtual void mouseMoveAction(Window& w, float x, float y) {};
 	virtual void render() {};
 	virtual void update(float fTimeDif) {};
 };//scene
@@ -73,6 +74,8 @@ public:
 	};//class
 
 	EventBuffer xEvents;
+    Sint32 iLastMouseX = 0;
+    Sint32 iLastMouseY = 0;
 	std::shared_ptr<Settings> pSettings;
 	std::shared_ptr<Scene> pScene = nullptr;
 	bool bKeepLooping = true;
@@ -104,7 +107,7 @@ public:
 	std::vector<std::tuple<std::string, std::function<void(World&, Window&)>>> vActions;
 	unsigned int uiChunkLayers;
 	volatile bool bRenderLines = false;
-	bool bCamUp = false, bCamLeft = false, bCamRight = false, bCamDown = false, bCamIn = false, bCamOut = false;
+	bool bCamUp = false, bCamLeft = false, bCamRight = false, bCamDown = false, bCamIn = false, bCamOut = false, bMoveWithMouse = false;
 
 
 	std::shared_ptr<Chunk> get(int x, int y);
@@ -114,6 +117,14 @@ public:
 	World(std::shared_ptr<Settings> pSettings);
 	void render();
 	void action(std::string s, Window& w);
+	virtual void mouseMoveAction(Window& w, float x, float y) 
+    {
+        if(bMoveWithMouse)
+        {
+            fCameraX += x*fCameraZ/uiChunkSize;
+            fCameraY += y*fCameraZ/uiChunkSize;
+        }// if
+    }//function
 	virtual void update(float fTimeDif);
 };//scene
 

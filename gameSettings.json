@@ -82,6 +82,10 @@
                 "up": "camera.step.in",
                 "down": "camera.step.out"
             }
+        },
+        "click": {
+            "up": "move.with.mouse = false",
+            "down": "move.with.mouse = true"
         }
     },
     "chunks": {
