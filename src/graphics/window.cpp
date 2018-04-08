@@ -150,6 +150,7 @@ World::World(std::shared_ptr<Settings> pSettings)
 	pSettings(pSettings),
     pTextures(new Textures(pSettings)),
 	uiChunkSize(pSettings->get<unsigned int>("chunks.size")),
+	fCameraZ(pSettings->get<float>("camera.z")),
 	fCamSpeed(pSettings->get<float>("camera.speed")),
 	fCamZSpeed(pSettings->get<float>("camera.zspeed")),
 	pTiles(new Tiles(pSettings, pTextures))
@@ -275,10 +276,10 @@ void World::render()
     float fY = fCameraY;
 	float fZ = fCameraZ;
 
-	for(float x=std::floor(fX-fZ); x <= std::ceil(fX+fZ); x+=1)
-		for(float y=std::floor(fY-fZ); y <= std::ceil(fY+fZ); y+=1)
+	for(float x=std::floor(fX-fZ/uiChunkSize); x <= std::ceil(fX+fZ/uiChunkSize); x+=1)
+		for(float y=std::floor(fY-fZ/uiChunkSize); y <= std::ceil(fY+fZ/uiChunkSize); y+=1)
         {
-			get(x*uiChunkSize, y*uiChunkSize)->draw( (x-fX-1)*2/fZ, (y-fY-1)*2/fZ, 2/fZ );
+			get(x*uiChunkSize, y*uiChunkSize)->draw( uiChunkSize*(x-fX-1)*2/fZ, uiChunkSize*(y-fY-1)*2/fZ, uiChunkSize*2/fZ );
         }// for
 }//function
 
@@ -314,19 +315,19 @@ std::shared_ptr<Tile> World::get(int x, int y, unsigned int l)
 void World::update(float fTimeDif)
 {
 	if(bCamRight)
-		fCameraX += fTimeDif * fCamSpeed;
+		fCameraX += fTimeDif * fCamSpeed * fCameraZ / uiChunkSize;
 	if(bCamLeft)
-		fCameraX -= fTimeDif * fCamSpeed;
+		fCameraX -= fTimeDif * fCamSpeed * fCameraZ / uiChunkSize;
 	if(bCamUp)
-		fCameraY += fTimeDif * fCamSpeed;
+		fCameraY += fTimeDif * fCamSpeed * fCameraZ / uiChunkSize;
 	if(bCamDown)
-		fCameraY -= fTimeDif * fCamSpeed;
+		fCameraY -= fTimeDif * fCamSpeed * fCameraZ / uiChunkSize;
 	if(bCamIn)
     {
-		fCameraZ -= fTimeDif * fCamZSpeed;
+		fCameraZ -= fTimeDif * fCamZSpeed * uiChunkSize;
         if (fCameraZ < 1)
             fCameraZ = 1;
     }// if
 	if(bCamOut)
-		fCameraZ += fTimeDif * fCamZSpeed;
+		fCameraZ += fTimeDif * fCamZSpeed * uiChunkSize;
 }

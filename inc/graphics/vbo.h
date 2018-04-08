@@ -175,8 +175,8 @@ public:
 
         // this ensures that we do not accidentally draw one pixel further than the image
         // floating point arithmetic is not perfectly accurate...
-        const float zero = 0.000001f;
-        const float one =  0.999999f;
+        const float zero = 0.00001f;
+        const float one =  0.99999f;
 
 		unsigned int coord = 0;
 		for(unsigned int z = 0; z < uiChunkLayers; z++)
@@ -242,9 +242,8 @@ public:
         //text data
         for(unsigned int ui = 0; ui < uiChunkSize * uiChunkSize * uiChunkLayers * 6; ui++)
             vTexOffsets[ui] = 0.5;
-        setTex(std::rand()%uiChunkSize, std::rand()%uiChunkSize, 0, 0);
-        setTex(std::rand()%uiChunkSize, std::rand()%uiChunkSize, 0, 0);
-        setTex(std::rand()%uiChunkSize, std::rand()%uiChunkSize, 0, 0);
+        for(unsigned int ui = 0; ui < uiChunkSize; ui++)
+            setTex(std::rand()%uiChunkSize, std::rand()%uiChunkSize, 0, 0);
         updateTex();
 	}//constructor
 

@@ -98,7 +98,7 @@ public:
 	std::shared_ptr<Settings> pSettings;
     std::shared_ptr<Textures> pTextures;
 	unsigned int uiChunkSize;
-	float fCameraX = 0, fCameraY = 0, fCameraZ = 1, fCamSpeed, fCamZSpeed;
+	float fCameraX = 0, fCameraY = 0, fCameraZ, fCamSpeed, fCamZSpeed;
 	std::shared_ptr<Tiles> pTiles;
 	std::map<std::tuple<int, int>, std::shared_ptr<Chunk>> xChunks;
 	std::vector<std::tuple<std::string, std::function<void(World&, Window&)>>> vActions;

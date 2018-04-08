@@ -77,11 +77,12 @@
         "`": "toggleLines"
     },
     "chunks": {
-        "size": "16",
+        "size": "256",
         "layers": "1"
     },
     "camera": {
-        "speed": "2",
-        "zspeed": "1"
+        "speed": "1",
+        "zspeed": "0.1",
+        "z": "16"
     }
 }
