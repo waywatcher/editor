@@ -9,21 +9,25 @@
 class VBO
 {
 public:
-	GLuint vbo;
-	unsigned int iNum;
+    GLuint vbo;
+    const unsigned int iNum;
+    const size_t uiSize;
+    const bool bStatic;
 
-	VBO(unsigned int iNum, void* pVertices, size_t uiSize, bool bStatic = true);
-	~VBO();
-	void activate();
-	void deactivate();
-	static void link(
-			std::shared_ptr<Shader> pShader,
-			std::string sName,
-			unsigned int uiSizeOne,
-			GLenum eType,
-			bool bNormalized,
-			unsigned int uiStride
-		);
+    VBO(unsigned int iNum, void* pVertices, size_t uiSize, bool bStatic = true);
+    VBO(unsigned int iNum, size_t uiSize);
+    ~VBO();
+    void activate();
+    void deactivate();
+    static void link(
+            std::shared_ptr<Shader> pShader,
+            std::string sName,
+            unsigned int uiSizeOne,
+            GLenum eType,
+            bool bNormalized,
+            unsigned int uiStride
+        );
+    void set(void* pVertices);
 
 };//class
 
@@ -50,7 +54,7 @@ public:
 		pShader->activate();
 	}//constructor
 
-	void add(
+	std::shared_ptr<VBO> add(
 			std::shared_ptr<VBO> pVBO,
 			std::string sName,
 			unsigned int uiSizeOne,
@@ -68,10 +72,11 @@ public:
 		{
 			std::cerr << "Exception: " << e.what() << std::endl;
 		}
+        return pVBO;
 	}//function
 
 	template<typename T>
-	void add(
+	std::shared_ptr<VBO> add(
 			T* pVertices,
 			std::string sName,
 			unsigned int uiSizeOne,
@@ -81,12 +86,34 @@ public:
 			unsigned int uiStride = 0
 		)
 	{
-		add(
+		return add(
 				std::shared_ptr<VBO>(new VBO(
 						iNumElements * uiSizeOne, 
 						pVertices, 
 						sizeof(T),
 						bStatic
+					)),
+				sName,
+				uiSizeOne,
+				eType,
+				bNormalized,
+				uiStride
+			);
+	}//function
+
+	template<typename T>
+	std::shared_ptr<VBO> add(
+			std::string sName,
+			unsigned int uiSizeOne,
+			GLenum eType,
+			bool bNormalized = false,
+			unsigned int uiStride = 0
+		)
+	{
+		return add(
+				std::shared_ptr<VBO>(new VBO(
+						iNumElements * uiSizeOne, 
+						sizeof(T)
 					)),
 				sName,
 				uiSizeOne,
@@ -107,6 +134,8 @@ class ChunkVAO: public VAO
 public:
 	unsigned int uiChunkSize;
 	unsigned int uiChunkLayers;
+    std::shared_ptr<VBO> pTexOffsetBuffer;
+    std::vector<float> vTexOffsets;
 
 	std::vector<float> getVertexPosGrid()
 	{
@@ -140,7 +169,7 @@ public:
 				}//for
 		return vRet;
 	}//fuction
-	std::vector<float> getTexPosGrid()
+	std::vector<float> getTexPosGrid(unsigned int uiNumTextures)
 	{
 		std::vector<float> vRet(uiChunkSize * uiChunkSize * uiChunkLayers * 3 * 2 * 2);
 
@@ -153,25 +182,25 @@ public:
 					vRet[ coord++ ] = 0;
 
 					vRet[ coord++ ] = 0;
-					vRet[ coord++ ] = 1;
+					vRet[ coord++ ] = 1.0f/uiNumTextures;
 
 					vRet[ coord++ ] = 1;
 					vRet[ coord++ ] = 0;
 
 
 					vRet[ coord++ ] = 1;
-					vRet[ coord++ ] = 1;
+					vRet[ coord++ ] = 1.0f/uiNumTextures;
 
 					vRet[ coord++ ] = 1;
 					vRet[ coord++ ] = 0;
 
 					vRet[ coord++ ] = 0;
-					vRet[ coord++ ] = 1;
+					vRet[ coord++ ] = 1.0/uiNumTextures;
 				}//for
 		return vRet;
 	}//fuction
 
-	ChunkVAO(std::shared_ptr<Settings> pSettings)
+	ChunkVAO(std::shared_ptr<Settings> pSettings, unsigned int uiNumTextures)
 			:
 		VAO(
 				std::shared_ptr<Shader>(new Shader(pSettings, "textured")),
@@ -181,42 +210,24 @@ public:
 				3 * 2
 			),
 		uiChunkSize(pSettings->get<unsigned int>("chunks.size")),
-		uiChunkLayers(pSettings->get<unsigned int>("chunks.layers"))
+		uiChunkLayers(pSettings->get<unsigned int>("chunks.layers")),
+        vTexOffsets(uiChunkSize * uiChunkSize * uiChunkLayers * 2)
 	{
-		//setup chunk 
-		Texture t("assets/default.bmp");
 		//generate pos and tex
 		add<float>(getVertexPosGrid().data(), "pos", 2, GL_FLOAT);
-		add<float>(getTexPosGrid().data(), "tex", 2, GL_FLOAT);
-	}
-};//class
-/**
- * creates a grid
- * @note this is extremely inefficient at the moment but whatefs...
- */
-class TileVAO: public VAO
-{
-public:
+		add<float>(getTexPosGrid(uiNumTextures).data(), "tex", 2, GL_FLOAT);
+		pTexOffsetBuffer = add<float>("texOffset", 1, GL_FLOAT);
 
-	TileVAO(std::shared_ptr<Settings> pSettings, std::string sTextureName)
-			:
-		VAO(
-				std::shared_ptr<Shader>(new Shader(pSettings, "textured")),
-				4
-			)
-	{
-		//setup chunk 
-		Texture(pSettings->get<std::string>(std::string("graphics.textures.").append(sTextureName)));
-		float vPos[] = {
-			0.0, 0.0,
-			1.0, 0.0,
-			0.0, 1.0,
-			1.0, 1.0
-		};
-		//generate pos and tex
-		add<float>(vPos, "pos", 2, GL_FLOAT);
-		add<float>(vPos, "tex", 2, GL_FLOAT);
+        //text data
+        for(unsigned int ui = 0; ui < uiChunkSize * uiChunkSize * uiChunkLayers * 2; ui++)
+            vTexOffsets[ui] = 0.5;
+        pTexOffsetBuffer->set(&vTexOffsets[0]);
 	}
+
+    inline void updateTex(unsigned int uiX)
+    {
+
+    }
 };//class
 
 #endif

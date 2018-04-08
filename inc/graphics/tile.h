@@ -8,11 +8,9 @@ class Tile
 {
 public:
 	std::string sName;
-	std::shared_ptr<TileVAO> pVao;
+    std::shared_ptr<Texture> pTex;
 
-	Tile(std::string sName, std::shared_ptr<Settings> pSettings);
-
-	void draw(float x, float y, float s);
+	Tile(std::string sName, std::shared_ptr<Settings> pSettings, std::shared_ptr<Textures> pTextures);
 
 };//class
 
@@ -21,11 +19,11 @@ class Tiles
 public:
 	std::vector<std::shared_ptr<Tile>> vTiles;
 
-	Tiles(std::shared_ptr<Settings> pSettings)
+	Tiles(std::shared_ptr<Settings> pSettings, std::shared_ptr<Textures> pTextures)
 	{
-		for(std::string sTexName : pSettings->get_vec("graphics.texturelist"))
+		for(std::string sTilename : pSettings->get_vec("gameplay.tiles.list"))
 		{
-			vTiles.push_back(std::shared_ptr<Tile>(new Tile(sTexName, pSettings)));
+	    	vTiles.push_back(std::shared_ptr<Tile>(new Tile(sTilename, pSettings, pTextures)));
 		}//for
 	}//constructor
 
@@ -49,6 +47,7 @@ public:
 	const unsigned int iSize;
 	const unsigned int iLayers;
 	std::vector<std::shared_ptr<Tile>> vTiles;
+    std::shared_ptr<ChunkVAO> pVAO;
 
 	unsigned int index(unsigned int x, unsigned int y, unsigned int l);
 	std::shared_ptr<Tile> get(unsigned int x, unsigned int y, unsigned int l);

@@ -95,6 +95,7 @@ class World: public Scene
 {
 public:
 	std::shared_ptr<Settings> pSettings;
+    std::shared_ptr<Textures> pTextures;
 	unsigned int uiChunkSize;
 	float fCameraX = 0, fCameraY = 0, fCameraZ = 0, fCamSpeed, fCamZSpeed;
 	std::shared_ptr<Tiles> pTiles;

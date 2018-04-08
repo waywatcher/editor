@@ -10,8 +10,10 @@ int SDL_main(int argc, char *argv[])
 {
 	try
 	{
+        //load settings
 		std::shared_ptr<Settings> pSettings(new Settings());
 
+        //create the window
 		Window w(pSettings);
 
 		//the logic thread

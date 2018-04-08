@@ -7,14 +7,14 @@
                 "geometry_shader": "null"
             },
             "default": {
-                "vertex_shader": "shaders\/vertex\/default.shader",
+                "vertex_shader": "shaders\/vertex\/default.vertex",
                 "geometry_shader": "null",
-                "fragment_shader": "shaders\/fragment\/default.shader"
+                "fragment_shader": "shaders\/fragment\/default.fragment"
             },
             "textured": {
-                "vertex_shader": "shaders\/vertex\/textured.shader",
+                "vertex_shader": "shaders\/vertex\/textured.vertex",
                 "geometry_shader": "null",
-                "fragment_shader": "shaders\/fragment\/textured.shader"
+                "fragment_shader": "shaders\/fragment\/textured.fragment"
             }
         },
         "resolution": {
@@ -22,13 +22,29 @@
             "y": "480"
         },
         "textures": {
-            "default": "assets\/stone.bmp"
-        },
-        "texturelist": [
-            "default"
-        ]
+            "default": "assets\/default.bmp",
+            "stone": "assets\/stone.bmp",
+            "size": {
+                "x": "50",
+                "y": "50",
+                "z": "4"
+            },
+            "list": [
+                "default",
+                "stone"
+            ]
+        }
     },
-    "gameplay": "",
+    "gameplay": {
+        "tiles": {
+            "default": {
+                "texture": "default"
+            },
+            "list": [
+                "default"
+            ]
+        }
+    },
     "keys": {
         "Escape": {
             "up": "quit"
@@ -62,7 +78,7 @@
     },
     "chunks": {
         "size": "16",
-        "layers": "8"
+        "layers": "1"
     },
     "camera": {
         "speed": "1",

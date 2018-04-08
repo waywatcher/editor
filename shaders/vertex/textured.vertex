@@ -2,16 +2,14 @@
 
 in vec2 pos;
 in vec2 tex;
-in uint texId;
+in float texOffset;
 
 uniform mat3 modelView;
 
-out vec2 texcoord;
-flat out uint texIdFrag;
+out vec2 texPos;
 
 void main()
 {
 	gl_Position = vec4(modelView * vec3(pos, 1), 1);
-	texcoord = tex;
-	texIdFrag = texId;
+	texPos = vec2(tex.x, tex.y + texOffset);
 }

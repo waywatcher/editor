@@ -2,6 +2,7 @@
 
 in vec2 pos;
 in vec2 tex;
+in uint texOffset;
 in mat2 modelView;
 
 void main()

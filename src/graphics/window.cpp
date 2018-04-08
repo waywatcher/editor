@@ -148,10 +148,11 @@ void Window::processEvents()
 World::World(std::shared_ptr<Settings> pSettings)
 		:
 	pSettings(pSettings),
+    pTextures(new Textures(pSettings)),
 	uiChunkSize(pSettings->get<unsigned int>("chunks.size")),
 	fCamSpeed(pSettings->get<float>("camera.speed")),
 	fCamZSpeed(pSettings->get<float>("camera.zspeed")),
-	pTiles(new Tiles(pSettings))
+	pTiles(new Tiles(pSettings, pTextures))
 {
 	//initialize the actions
 	vActions.push_back(std::make_tuple(
@@ -258,7 +259,7 @@ World::World(std::shared_ptr<Settings> pSettings)
 				wo.bCamOut = false;
 			}
 		));
-}//construcotor
+}//constructor
 
 
 void Window::render()
@@ -273,8 +274,10 @@ void World::render()
 	float fX = fCameraX;
 	float fY = fCameraY;
 	float fZ = fCameraZ;
-	for(int x=(int)(fX-fZ-2); x < fX+fZ+1; x++)
-		for(int y=(int)(fY-fZ-2); y < fY+fZ+1; y++)
+    int x = 0;
+    int y = 0;
+	//for(int x=(int)(fX-fZ-2); x < fX+fZ+1; x++)
+	//	for(int y=(int)(fY-fZ-2); y < fY+fZ+1; y++)
 			get(x,y)->draw( ((float)x)-fX/(fZ+1), ((float)y)-fY/(fZ+1), 2.f/(fZ*2+1));
 }//function
 

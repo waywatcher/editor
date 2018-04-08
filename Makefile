@@ -9,7 +9,7 @@ GLEW=C:\glew-2.1.0
 CC=gcc
 BOOST=C:\boost\boost_1_65_1
 PYTHON=C:\Python35-32
-CCFLAGS= -Wall -fPIC -std=gnu++0x -Werror
+CCFLAGS= -Wall -fPIC -std=gnu++0x -Werror -g
 INCLUDES= \
  -isystem$(BOOST) \
  -isystem$(PYTHON)\include \

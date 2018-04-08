@@ -1,22 +1,19 @@
 #include "graphics/tile.h"
 
-Tile::Tile(std::string sName, std::shared_ptr<Settings> pSettings)
+Tile::Tile(std::string sName, std::shared_ptr<Settings> pSettings, std::shared_ptr<Textures> pTextures)
 		:
 	sName(sName),
-	pVao(std::shared_ptr<TileVAO>(new TileVAO(pSettings, sName)))
+    pTex(pTextures->get(pSettings->get<std::string>("gameplay.tiles." + sName + ".texture")))
 {
-}//constructor
 
-void Tile::draw(float x, float y, float s)
-{
-	pVao->draw(x,y,s);
-}///function
+}//constructor
 
 Chunk::Chunk(std::shared_ptr<Tiles> pTiles, std::shared_ptr<Settings> pSettings)
 		:
 	iSize(pSettings->get<unsigned int>("chunks.size")),
 	iLayers(pSettings->get<unsigned int>("chunks.layers")),
-	vTiles(iSize*iSize*iLayers)
+	vTiles(iSize*iSize*iLayers),
+    pVAO(new ChunkVAO(pSettings, pSettings->get_vec("graphics.textures.list").size()))
 {
 	for(unsigned int i=0; i < iLayers; i++)
 		for(unsigned int x=0; x < iSize; x++)
@@ -45,8 +42,5 @@ std::shared_ptr<Tile> Chunk::get(unsigned int x, unsigned int y, unsigned int l)
 
 void Chunk::draw(float fx, float fy, float s)
 {
-	for(unsigned int i=0; i < iLayers; i++)
-		for(unsigned int x=0; x < iSize; x++)
-			for(unsigned int y=0; y < iSize; y++)
-				get(x,y,i)->draw(fx+x*s/((float)iSize), fy+y*s/((float)iSize), s/iSize);
+    pVAO->draw(fx, fy, s);
 }///function

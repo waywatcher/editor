@@ -2,13 +2,33 @@
 
 VBO::VBO(unsigned int iNum, void* pVertices, size_t uiSize, bool bStatic)
 		:
-	iNum(iNum)
+	iNum(iNum),
+    uiSize(uiSize),
+    bStatic(bStatic)
 {
 	glGenBuffers(1, &vbo); // Generate buffer
 	activate();
 	glBufferData(GL_ARRAY_BUFFER, uiSize*iNum, pVertices,
 		bStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }//constructor
+
+/// When no data is give we always want to create a dynamic buffer
+VBO::VBO(unsigned int iNum, size_t uiSize)
+		:
+	iNum(iNum),
+    uiSize(uiSize),
+    bStatic(false)
+{
+	glGenBuffers(1, &vbo); // Generate buffer
+	activate();
+	glBufferData(GL_ARRAY_BUFFER, uiSize*iNum, NULL, GL_DYNAMIC_DRAW);
+}//constructor
+
+void VBO::set(void* pVertices)
+{
+    assert(!bStatic);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, uiSize*iNum, pVertices);
+}
 
 void VBO::activate()
 {
@@ -29,7 +49,7 @@ void VAO::draw(float x, float y, float s)
 		x, y, 1
 	};
 	pShader->setMat("modelView", f);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, iNumElements);
+	glDrawArrays(GL_TRIANGLES, 0, iNumElements);
 }//function
 
 VBO::~VBO()

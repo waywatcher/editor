@@ -1,0 +1,13 @@
+#version 150 core
+
+in vec2 texPos;
+
+//the one big texture
+uniform sampler2D textures;
+
+out vec4 outColor;
+
+void main()
+{
+    outColor = texture(textures, texPos);
+}

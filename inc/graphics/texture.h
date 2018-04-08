@@ -15,27 +15,23 @@
 class Texture
 {
 public:
-	GLuint iTex;
-	Texture(std::string sFileName);
-	static void link(
-			std::shared_ptr<Shader> pShader,
-			std::string sName,
-			unsigned int uiSizeOne,
-			GLenum eType,
-			bool bNormalized,
-			unsigned int uiStride
-		);
+    const float uiTexOffset;
+	Texture(float uiTexOffset)
+            :
+        uiTexOffset(uiTexOffset)
+    {}//constructor
 };//class
 
 class Textures
 {
 public:
+	GLuint iTex;
 	std::shared_ptr<Settings> pSettings;
-	std::vector<std::tuple<std::string, std::shared_ptr<Texture>>> vTextures;
+	std::vector<std::pair<std::string, std::shared_ptr<Texture>>> vTextures;
+    std::vector<float> vPixels;
 
 	Textures(std::shared_ptr<Settings> pSettings);
 
-	void load(std::string sName);
 	std::shared_ptr<Texture> get(std::string sName);
 };//class
 
