@@ -18,8 +18,8 @@
             }
         },
         "resolution": {
-            "x": "640",
-            "y": "480"
+            "x": "860",
+            "y": "640"
         },
         "textures": {
             "default": "assets\/default.bmp",
@@ -81,7 +81,7 @@
         "layers": "1"
     },
     "camera": {
-        "speed": "1",
-        "zspeed": "0.1"
+        "speed": "2",
+        "zspeed": "1"
     }
 }

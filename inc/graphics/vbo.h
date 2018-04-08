@@ -141,7 +141,7 @@ public:
 	{
 		std::vector<float> vRet(uiChunkSize * uiChunkSize * uiChunkLayers * 3 * 2 * 2);
 
-		float one = 1.f / uiChunkSize;
+		const float one = 1.f / uiChunkSize;
 
 		unsigned int coord = 0;
 		for(unsigned int z = 0; z < uiChunkLayers; z++)
@@ -173,32 +173,53 @@ public:
 	{
 		std::vector<float> vRet(uiChunkSize * uiChunkSize * uiChunkLayers * 3 * 2 * 2);
 
+        // this ensures that we do not accidentally draw one pixel further than the image
+        // floating point arithmetic is not perfectly accurate...
+        const float zero = 0.000001f;
+        const float one =  0.999999f;
+
 		unsigned int coord = 0;
 		for(unsigned int z = 0; z < uiChunkLayers; z++)
 			for(unsigned int y = 0; y < uiChunkSize; y++)
 				for(unsigned int x = 0; x < uiChunkSize; x++)
 				{
-					vRet[ coord++ ] = 0;
-					vRet[ coord++ ] = 0;
+					vRet[ coord++ ] = zero;
+					vRet[ coord++ ] = zero;
 
-					vRet[ coord++ ] = 0;
-					vRet[ coord++ ] = 1.0f/uiNumTextures;
+					vRet[ coord++ ] = zero;
+					vRet[ coord++ ] = one/uiNumTextures;
 
-					vRet[ coord++ ] = 1;
-					vRet[ coord++ ] = 0;
+					vRet[ coord++ ] = one;
+					vRet[ coord++ ] = zero;
 
 
-					vRet[ coord++ ] = 1;
-					vRet[ coord++ ] = 1.0f/uiNumTextures;
+					vRet[ coord++ ] = one;
+					vRet[ coord++ ] = one/uiNumTextures;
 
-					vRet[ coord++ ] = 1;
-					vRet[ coord++ ] = 0;
+					vRet[ coord++ ] = one;
+					vRet[ coord++ ] = zero;
 
-					vRet[ coord++ ] = 0;
-					vRet[ coord++ ] = 1.0/uiNumTextures;
+					vRet[ coord++ ] = zero;
+					vRet[ coord++ ] = one/uiNumTextures;
 				}//for
 		return vRet;
 	}//fuction
+
+    inline void setTex(unsigned int uiX, unsigned int uiY, unsigned int uiZ, const float uiF)
+    {
+        for(unsigned int uiI = 0; uiI < 6; uiI++)
+            vTexOffsets[ ((uiX + uiY * uiChunkSize) * uiChunkLayers + uiZ) * 6 + uiI] = uiF;
+    }//function
+
+    inline void setTex(unsigned int uiX, unsigned int uiY, unsigned int uiZ, std::shared_ptr<Texture> pTex)
+    {
+        setTex(uiX, uiY, uiZ, pTex->uiTexOffset);
+    }//function
+
+    inline void updateTex()
+    {
+        pTexOffsetBuffer->set(&vTexOffsets[0]);
+    }//function
 
 	ChunkVAO(std::shared_ptr<Settings> pSettings, unsigned int uiNumTextures)
 			:
@@ -211,7 +232,7 @@ public:
 			),
 		uiChunkSize(pSettings->get<unsigned int>("chunks.size")),
 		uiChunkLayers(pSettings->get<unsigned int>("chunks.layers")),
-        vTexOffsets(uiChunkSize * uiChunkSize * uiChunkLayers * 2)
+        vTexOffsets(uiChunkSize * uiChunkSize * uiChunkLayers * 6)
 	{
 		//generate pos and tex
 		add<float>(getVertexPosGrid().data(), "pos", 2, GL_FLOAT);
@@ -219,15 +240,14 @@ public:
 		pTexOffsetBuffer = add<float>("texOffset", 1, GL_FLOAT);
 
         //text data
-        for(unsigned int ui = 0; ui < uiChunkSize * uiChunkSize * uiChunkLayers * 2; ui++)
+        for(unsigned int ui = 0; ui < uiChunkSize * uiChunkSize * uiChunkLayers * 6; ui++)
             vTexOffsets[ui] = 0.5;
-        pTexOffsetBuffer->set(&vTexOffsets[0]);
-	}
+        setTex(std::rand()%uiChunkSize, std::rand()%uiChunkSize, 0, 0);
+        setTex(std::rand()%uiChunkSize, std::rand()%uiChunkSize, 0, 0);
+        setTex(std::rand()%uiChunkSize, std::rand()%uiChunkSize, 0, 0);
+        updateTex();
+	}//constructor
 
-    inline void updateTex(unsigned int uiX)
-    {
-
-    }
 };//class
 
 #endif

@@ -271,14 +271,15 @@ void Window::render()
 
 void World::render()
 {
-	float fX = fCameraX;
-	float fY = fCameraY;
+    float fX = fCameraX;
+    float fY = fCameraY;
 	float fZ = fCameraZ;
-    int x = 0;
-    int y = 0;
-	//for(int x=(int)(fX-fZ-2); x < fX+fZ+1; x++)
-	//	for(int y=(int)(fY-fZ-2); y < fY+fZ+1; y++)
-			get(x,y)->draw( ((float)x)-fX/(fZ+1), ((float)y)-fY/(fZ+1), 2.f/(fZ*2+1));
+
+	for(float x=std::floor(fX-fZ); x <= std::ceil(fX+fZ); x+=1)
+		for(float y=std::floor(fY-fZ); y <= std::ceil(fY+fZ); y+=1)
+        {
+			get(x*uiChunkSize, y*uiChunkSize)->draw( (x-fX-1)*2/fZ, (y-fY-1)*2/fZ, 2/fZ );
+        }// for
 }//function
 
 void World::action(std::string s, Window& w)
@@ -321,7 +322,11 @@ void World::update(float fTimeDif)
 	if(bCamDown)
 		fCameraY -= fTimeDif * fCamSpeed;
 	if(bCamIn)
+    {
 		fCameraZ -= fTimeDif * fCamZSpeed;
+        if (fCameraZ < 1)
+            fCameraZ = 1;
+    }// if
 	if(bCamOut)
 		fCameraZ += fTimeDif * fCamZSpeed;
 }
