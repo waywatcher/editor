@@ -76,13 +76,21 @@
         "Space": "unkown",
         "`": "toggleLines"
     },
+    "mouse": {
+        "wheel": {
+            "scroll": {
+                "up": "camera.step.in",
+                "down": "camera.step.out"
+            }
+        }
+    },
     "chunks": {
         "size": "256",
         "layers": "1"
     },
     "camera": {
         "speed": "1",
-        "zspeed": "0.1",
+        "zspeed": "1",
         "z": "16"
     }
 }

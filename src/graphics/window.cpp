@@ -91,6 +91,7 @@ void Window::processEvents()
 		[&]
 		(SDL_Event& event)
 		{
+            Sint32 x;
 			switch( event.type ) 
 			{
 				case SDL_KEYDOWN:
@@ -110,6 +111,72 @@ void Window::processEvents()
 						catch(Exception e)
 						{
 							std::cout << std::string("Unknown Key: ").append(SDL_GetKeyName(event.key.keysym.sym)) << std::endl;
+						}
+					}
+					break;
+				case SDL_MOUSEWHEEL:
+					try
+					{
+                        x = event.wheel.y;
+                        if(x > 0)
+                        {
+                            auto xScrollUp = pSettings->get<std::string>(std::string("mouse.wheel.scroll.up"));
+                            while(x-- > 0)
+                                action(xScrollUp);
+					        break;
+                        }
+                        if(x < 0)
+                        {
+                            auto xScrollDown = pSettings->get<std::string>(std::string("mouse.wheel.scroll.down"));
+                            while(x++ < 0)
+                                action(xScrollDown);
+					        break;
+                        }
+					}
+					catch(Exception e)
+					{
+						try
+						{
+                            auto xScroll = pSettings->get<std::string>(std::string("mouse.wheel.scroll"));
+						    action(xScroll);
+						}
+						catch(Exception e)
+						{
+							std::cout << std::string("Unknown: mouse.wheel.scroll") << std::endl;
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					try
+					{
+						action(pSettings->get<std::string>(std::string("mouse.wheel.click.down")));
+					}
+					catch(Exception e)
+					{
+						try
+						{
+						    action(pSettings->get<std::string>(std::string("mouse.wheel.click")));
+						}
+						catch(Exception e)
+						{
+							std::cout << std::string("Unknown: mouse.wheel.click") << std::endl;
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					try
+					{
+						action(pSettings->get<std::string>(std::string("mouse.wheel.click.up")));
+					}
+					catch(Exception e)
+					{
+						try
+						{
+						    action(pSettings->get<std::string>(std::string("mouse.wheel.click")));
+						}
+						catch(Exception e)
+						{
+							std::cout << std::string("Unknown: Mousewheel") << std::endl;
 						}
 					}
 					break;
@@ -260,6 +327,24 @@ World::World(std::shared_ptr<Settings> pSettings)
 				wo.bCamOut = false;
 			}
 		));
+	vActions.push_back(std::make_tuple(
+			"camera.step.out",
+			[]
+			(World &wo, Window &w)
+			{
+				wo.fCameraZ += wo.fCamZSpeed*wo.fCameraZ/10;
+			}
+		));
+	vActions.push_back(std::make_tuple(
+			"camera.step.in",
+			[]
+			(World &wo, Window &w)
+			{
+				wo.fCameraZ -= wo.fCamZSpeed*wo.fCameraZ/10;
+                if (wo.fCameraZ < 1)
+                    wo.fCameraZ = 1;
+			}
+		));
 }//constructor
 
 
@@ -324,10 +409,10 @@ void World::update(float fTimeDif)
 		fCameraY -= fTimeDif * fCamSpeed * fCameraZ / uiChunkSize;
 	if(bCamIn)
     {
-		fCameraZ -= fTimeDif * fCamZSpeed * uiChunkSize;
+		fCameraZ -= fTimeDif * fCamZSpeed * uiChunkSize * fCameraZ / 100;
         if (fCameraZ < 1)
             fCameraZ = 1;
     }// if
 	if(bCamOut)
-		fCameraZ += fTimeDif * fCamZSpeed * uiChunkSize;
+		fCameraZ += fTimeDif * fCamZSpeed * uiChunkSize * fCameraZ / 100;
 }
