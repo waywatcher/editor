@@ -205,8 +205,8 @@ void Window::processEvents()
                     SDL_GetWindowSize(window, &w, &h);
                     pScene->mouseMoveAction(
                         *this, 
-                        (float)(event.motion.x - iLastMouseX) / w, 
-                        -(float)(event.motion.y - iLastMouseY) / h);
+                        -(float)(event.motion.x - iLastMouseX) / w, 
+                        (float)(event.motion.y - iLastMouseY) / h);
                     iLastMouseX = event.motion.x;
                     iLastMouseY = event.motion.y;
 					break;
